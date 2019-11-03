@@ -1,4 +1,4 @@
-﻿using FRC.NetworkTables;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -34,22 +34,22 @@ namespace TreeViewTesting
         {
             base.OnNavigatedTo(e);
 
-            NetworkTableInstance instance = NetworkTableInstance.Default;
-            instance.SetServer("127.0.0.1");
-            instance.StartClient();
+            //NetworkTableInstance instance = NetworkTableInstance.Default;
+            //instance.SetServer("127.0.0.1");
+            //instance.StartClient();
 
-            instance.GetEntry("/MyEntry").SetBoolean(true);
+            //instance.GetEntry("/MyEntry").SetBoolean(true);
 
-            instance.GetEntry("/Table/NEwThing").SetBoolean(true);
-            instance.GetEntry("/Table/NEwThing2").SetBoolean(true);
+            //instance.GetEntry("/Table/NEwThing").SetBoolean(true);
+            //instance.GetEntry("/Table/NEwThing2").SetBoolean(true);
 
-            instance.GetEntry("/Table2/NEwThing").SetBoolean(true);
-            instance.GetEntry("/Table2/NEwThing2").SetBoolean(true);
+            //instance.GetEntry("/Table2/NEwThing").SetBoolean(true);
+            //instance.GetEntry("/Table2/NEwThing2").SetBoolean(true);
 
-            instance.GetEntry("/Table2/T2/Thing").SetBoolean(true);
-            instance.GetEntry("/Table2/T3/Thing").SetBoolean(true);
+            //instance.GetEntry("/Table2/T2/Thing").SetBoolean(true);
+            //instance.GetEntry("/Table2/T3/Thing").SetBoolean(true);
 
-            TableTree.StartNetworking(instance);
+            //TableTree.StartNetworking(instance);
         }
     }
 }

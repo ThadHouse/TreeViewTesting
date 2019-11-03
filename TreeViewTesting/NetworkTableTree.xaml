@@ -22,12 +22,8 @@
                 <DataTemplate x:DataType="local:NetworkTableTreeEntry">
                     <TreeViewItem
                                 
-                                    ItemsSource="{x:Bind Children}">
-                        <RelativePanel>
-                            
-                            <TextBlock RelativePanel.AlignLeftWithPanel ="True" Text="{x:Bind EntryName}" />
-                            <TextBox RelativePanel.AlignRightWithPanel ="True" Text="Hello World!"/>
-                        </RelativePanel>
+                                    ItemsSource="{x:Bind Children}"
+                                    Content="{x:Bind EntryContent}">
                     </TreeViewItem>
                 </DataTemplate>
             </TreeView.ItemTemplate>

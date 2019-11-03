@@ -1,4 +1,4 @@
-﻿using FRC.NetworkTables;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -19,16 +19,16 @@ namespace TreeViewTesting
             get
             {
                 var key = FullName.AsSpan();
-                if (key[key.Length - 1] == NetworkTable.PathSeparator) 
+                if (key[key.Length - 1] == '/') 
                 {
                     key = key.Slice(0, key.Length - 1);
                 }
-                key = key.Slice(key.LastIndexOf(NetworkTable.PathSeparator) + 1);
+                key = key.Slice(key.LastIndexOf('/') + 1);
                 return key.ToString();
             }
         }
 
-        public NetworkTableEntry? Entry;
+        //public NetworkTableEntry? Entry;
         public ObservableCollection<NetworkTableTreeEntry> Children { get; set; } = new ObservableCollection<NetworkTableTreeEntry>();
 
         public NetworkTableTreeEntry(string key)
@@ -37,10 +37,10 @@ namespace TreeViewTesting
             EntryContent = EntryName;
         }
 
-        public NetworkTableTreeEntry(string key, NetworkTableEntry ntEntry, object value)
+        public NetworkTableTreeEntry(string key, object value)
         {
             FullName = key;
-            EntryContent = new StringEntryControl(EntryName, ntEntry.GetObjectValue().ToString());
+            EntryContent = new StringEntryControl(EntryName, value.ToString());
         }
     }
 }

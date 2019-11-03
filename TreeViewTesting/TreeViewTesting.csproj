@@ -175,14 +175,6 @@
       <Version>4.5.3</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <Reference Include="FRC.NetworkTables.Core">
-      <HintPath>..\..\..\..\GitHub\NetworkTables\src\FRC.NetworkTables.Core\bin\Debug\netstandard2.0\FRC.NetworkTables.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="FRC.NetworkTables.Core.DesktopLibraries">
-      <HintPath>..\..\..\..\GitHub\NetworkTables\src\FRC.NetworkTables.Core.DesktopLibraries\bin\Debug\netstandard2.0\FRC.NetworkTables.Core.DesktopLibraries.dll</HintPath>
-    </Reference>
-  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

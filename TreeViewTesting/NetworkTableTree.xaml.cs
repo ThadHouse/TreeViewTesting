@@ -1,4 +1,4 @@
-﻿using FRC.NetworkTables;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -27,116 +27,124 @@ namespace TreeViewTesting
         {
             this.InitializeComponent();
 
-            DataSource.Add(new NetworkTableTreeEntry($"{NetworkTable.PathSeparator}Root")); 
+            DataSource.Add(new NetworkTableTreeEntry($"/Root"));
+            DataSource[0].Children.Add(new NetworkTableTreeEntry("/MyTable/"));
+            DataSource[0].Children.Add(new NetworkTableTreeEntry("/MyTable2/"));
+            DataSource[0].Children.Add(new NetworkTableTreeEntry("/MyTableValue", 42));
+
+            DataSource[0].Children[0].Children.Add(new NetworkTableTreeEntry("/MyTable/TableVal", "hello"));
+            DataSource[0].Children[1].Children.Add(new NetworkTableTreeEntry("/MyTable2/T2Val", true));
+
+
         }
 
-        public void StartNetworking(NetworkTableInstance instance)
-        {
-            instance.AddEntryListener("", (in RefEntryNotification notification) =>
-            {
-                string name = notification.Name.ToString();
-                var entry = notification.Entry;
-                var flags = notification.Flags;
-                object value = notification.Value.ToValue().Value.GetValue();
-                Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.High, () =>
-                {
-                    Accept(name, entry, flags, value);
-                });
+        //public void StartNetworking(NetworkTableInstance instance)
+        //{
+        //    instance.AddEntryListener("", (in RefEntryNotification notification) =>
+        //    {
+        //        string name = notification.Name.ToString();
+        //        var entry = notification.Entry;
+        //        var flags = notification.Flags;
+        //        object value = notification.Value.ToValue().Value.GetValue();
+        //        Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.High, () =>
+        //        {
+        //            Accept(name, entry, flags, value);
+        //        });
                 
-            }, (NotifyFlags)0xFF);
-        }
+        //    }, (NotifyFlags)0xFF);
+        //}
 
-        private void Accept(string name, NetworkTableEntry ntEntry, NotifyFlags flags, object value)
-        {
-            var pathElements = name.ToString().Split(NetworkTable.PathSeparator).Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+        //private void Accept(string name, object value)
+        //{
+        //    var pathElements = name.ToString().Split(NetworkTable.PathSeparator).Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
 
-            var finalPathElement = pathElements[pathElements.Length - 1];
+        //    var finalPathElement = pathElements[pathElements.Length - 1];
 
-            StringBuilder path = new StringBuilder();
-            path.Append(NetworkTable.PathSeparator);
+        //    StringBuilder path = new StringBuilder();
+        //    path.Append(NetworkTable.PathSeparator);
 
-            var current = DataSource[0]; // Root will only be a single element
+        //    var current = DataSource[0]; // Root will only be a single element
 
-            foreach (var node in pathElements)
-            {
-                if (node == pathElements[pathElements.Length - 1]) break;
-                path.Append(node).Append(NetworkTable.PathSeparator);
+        //    foreach (var node in pathElements)
+        //    {
+        //        if (node == pathElements[pathElements.Length - 1]) break;
+        //        path.Append(node).Append(NetworkTable.PathSeparator);
 
-                var pt = path.ToString();
+        //        var pt = path.ToString();
 
-                var normalized = current.Children.Select(x => Normalize(x.FullName)).ToArray();
+        //        var normalized = current.Children.Select(x => Normalize(x.FullName)).ToArray();
 
-                var entry = current.Children.Where(x => Normalize(x.FullName) == path.ToString()).FirstOrDefault();
+        //        var entry = current.Children.Where(x => Normalize(x.FullName) == path.ToString()).FirstOrDefault();
                 
-                if (entry != null)
-                {
-                    current = entry;
-                }
-                else
-                {
-                    // Does not exist
-                    var newRow = new NetworkTableTreeEntry(path.ToString(), ntEntry, value);
-                    current.Children.Add(newRow);
-                    current = newRow;
-                }
+        //        if (entry != null)
+        //        {
+        //            current = entry;
+        //        }
+        //        else
+        //        {
+        //            // Does not exist
+        //            var newRow = new NetworkTableTreeEntry(path.ToString(), ntEntry, value);
+        //            current.Children.Add(newRow);
+        //            current = newRow;
+        //        }
 
-            }
+        //    }
 
-            path.Append(finalPathElement);
+        //    path.Append(finalPathElement);
 
-            var row = current.Children.Where(x => Normalize(x.FullName) == path.ToString()).FirstOrDefault();
+        //    var row = current.Children.Where(x => Normalize(x.FullName) == path.ToString()).FirstOrDefault();
 
-            if (flags.HasFlag(NotifyFlags.Delete))
-            {
-                if (row != null)
-                {
-                    current.Children.Remove(row);
-                }
-            } 
-            else if (row != null)
-            {
-                // Update TODO
-                ;
-            }
-            else
-            {
-                current.Children.Add(new NetworkTableTreeEntry(path.ToString(), ntEntry, value));
-            }
+        //    if (flags.HasFlag(NotifyFlags.Delete))
+        //    {
+        //        if (row != null)
+        //        {
+        //            current.Children.Remove(row);
+        //        }
+        //    } 
+        //    else if (row != null)
+        //    {
+        //        // Update TODO
+        //        ;
+        //    }
+        //    else
+        //    {
+        //        current.Children.Add(new NetworkTableTreeEntry(path.ToString(), ntEntry, value));
+        //    }
 
-        }
+        //}
 
-        private string Normalize(string key)
-        {
-            string tmp = NetworkTable.PathSeparator + key;
-            var sep = NetworkTable.PathSeparator;
-            StringBuilder newString = new StringBuilder();
-            for (int i = 0; i < tmp.Length; i++)
-            {
-                if (tmp[i] == sep)
-                {
-                    // Add it
-                    newString.Append(tmp[i]);
-                    i++;
-                    // Advance to first not sep character
-                    while (true)
-                    {
-                        if (i >= tmp.Length) goto end;
-                        if (tmp[i] == sep) i++;
-                        else
-                        {
-                            i--;
-                            break;
-                        }
-                    }
-                }
-                else
-                {
-                    newString.Append(tmp[i]);
-                }
-            }
-        end:
-            return newString.ToString();
-        }
+        //private string Normalize(string key)
+        //{
+        //    string tmp = NetworkTable.PathSeparator + key;
+        //    var sep = NetworkTable.PathSeparator;
+        //    StringBuilder newString = new StringBuilder();
+        //    for (int i = 0; i < tmp.Length; i++)
+        //    {
+        //        if (tmp[i] == sep)
+        //        {
+        //            // Add it
+        //            newString.Append(tmp[i]);
+        //            i++;
+        //            // Advance to first not sep character
+        //            while (true)
+        //            {
+        //                if (i >= tmp.Length) goto end;
+        //                if (tmp[i] == sep) i++;
+        //                else
+        //                {
+        //                    i--;
+        //                    break;
+        //                }
+        //            }
+        //        }
+        //        else
+        //        {
+        //            newString.Append(tmp[i]);
+        //        }
+        //    }
+        //end:
+        //    return newString.ToString();
+        //}
 
     }
 }
